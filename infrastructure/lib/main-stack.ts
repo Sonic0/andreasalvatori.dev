@@ -67,7 +67,7 @@ export class SiteStack extends cdk.Stack {
         domainName: props.domainName,
         CFDistributionId: this.distribution.distributionId,
         codeBucketName: this.bucket.bucketName,
-        repoOwner: "marco-prontera"
+        repoOwner: "Sonic0"
       }
     )
     
