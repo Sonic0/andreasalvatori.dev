@@ -36,6 +36,16 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
           restore-keys: ${{ runner.os }}-node-
 
+      - name: Caching Gatsby
+        id: gatsby-cache-build
+        uses: actions/cache@v3
+        with:
+          path: |
+            public
+            .cache
+          key: ${{ runner.os }}-gatsby-build-${{ hashFiles('**/package.json') }}
+          restore-keys: ${{ runner.os }}-gatsby-build-
+
       - name: Install dependencies
         run: npm install
       
@@ -44,6 +54,8 @@ jobs:
     
       - name: Build with Gatsby
         run: gatsby build
+        env:
+          CI: true
 
       - name: Assume AWS IAM Role
         id: configure-aws-credentials
