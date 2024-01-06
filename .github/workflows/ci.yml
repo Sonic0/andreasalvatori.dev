@@ -23,16 +23,15 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Cache Npm
+      - name: Caching Gatsby
+        id: gatsby-cache-build
         uses: actions/cache@v3
-        id: cache
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
-          restore-keys: ${{ runner.os }}-node-
-      
-      - name: Install node-prune
-        run: curl -sf https://gobinaries.com/tj/node-prune | sh
+          path: |
+            public
+            .cache
+          key: ${{ runner.os }}-gatsby-build-${{ hashFiles('**/package.json') }}
+          restore-keys: ${{ runner.os }}-gatsby-build-
       
       - name: Install dependencies
         run: npm install
@@ -42,3 +41,5 @@ jobs:
 
       - name: Build Gatsby dev site
         run: gatsby build
+        env:
+          CI: true
