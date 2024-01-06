@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches-ignore:
+      - 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18, 20 ]
+
+    steps:
+      - name: Checkout working branch
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Cache Npm
+        uses: actions/cache@v3
+        id: cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+          restore-keys: ${{ runner.os }}-node-
+      
+      - name: Install node-prune
+        run: curl -sf https://gobinaries.com/tj/node-prune | sh
+      
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install gatsby-cli
+        run: npm install -g gatsby-cli
+
+      - name: Build Gatsby dev site
+        run: gatsby build

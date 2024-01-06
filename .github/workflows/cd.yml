@@ -1,0 +1,75 @@
+name: Deploy site to S3
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Release to deploy'
+        default: 'main'
+        required: false
+        type: string
+  release:
+    types: [ released ]
+jobs:
+  deploy:
+    name: Deploy to S3
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.release || 'main' }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Cache npm
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Install gatsby-cli
+        run: npm install -g gatsby-cli
+    
+      - name: Build with Gatsby
+        run: gatsby build
+
+      - name: Assume AWS IAM Role
+        id: configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-andreasalvatori.dev-actions-role
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Install AWS CLI v2
+        id: install-aws-cli
+        uses: unfor19/install-aws-cli-action@v1
+        with:
+          version: 2
+
+      - name: Deploy static site to S3 bucket
+        run: aws s3 sync ./out/ s3://${{ secrets.BUCKET_NAME }} --delete
+        shell: bash
+      
+      - name: CloudFront cache invalidation
+        run: |
+          echo "Getting CF distribution filtering by CDN description"
+          cloudfront_dist_ids=$(aws cloudfront list-distributions \
+            --query "DistributionList.Items[*].{id:Id,origin_domain:Origins.Items[0].DomainName,comment:Comment}[?starts_with(comment,'andreasalvatori.dev-prod')].id" --output text)
+          for id in "${cloudfront_dist_ids}"; do 
+            aws cloudfront create-invalidation --distribution-id "${id}" --paths "/*"
+          done
+        shell: bash
+
+        
