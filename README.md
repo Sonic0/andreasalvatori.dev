@@ -1,11 +1,15 @@
-[![AWS](https://img.shields.io/badge/AWS-S3%2BCloudFront-orange?style=flat-square)](https://aws.amazon.com/)
-![Prod CI](https://github.com/Sonic0/andreasalvatori.dev/workflows/Prod%20CI/badge.svg)
-
 # andreasalvatori.dev
+
+## Overview
+
+Personal website
 
 ## Infrastructure
 
-TODO
+IaC using CDK typescript.
+Simple static website infrastructure on AWS with CloudFront + S3
+
+![AWS Infra](https://miro.medium.com/v2/resize:fit:720/format:webp/1*4sb209LohOyh_JCo-Zonzg.png "Infrastructure example")
 
 ## 🚀 Features
 
