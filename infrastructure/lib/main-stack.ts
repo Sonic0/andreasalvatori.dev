@@ -15,6 +15,7 @@ import {
 } from 'aws-cdk-lib'
 import { StaticSiteStack } from './static-site-nested-stack'
 import { Oauth2PoliciesStack } from './oauth-nested-stack'
+import { ToolsStack } from './tools-nested-stack'
 
 export interface StackResources {
   readonly deployEnv: string,
@@ -81,6 +82,13 @@ export class SiteStack extends cdk.Stack {
     alarmsTopic.addSubscription(
       new snsSubscriptions.EmailSubscription(this.notificationsEmail)
     );
-
+    
+    new ToolsStack(
+      this, `Tools-${props.deployEnv}`, {
+        deployEnv: props.deployEnv,
+        domainName: props.domainName,
+        alarmsTopic
+      }
+    )
   }
 }
