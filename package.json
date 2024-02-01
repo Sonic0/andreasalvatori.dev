@@ -23,7 +23,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "*",
-    "url-join": "4.0.0"
+    "url-join": "5.0.0"
   },
   "devDependencies": {
     "eslint": "^8.38.0",
