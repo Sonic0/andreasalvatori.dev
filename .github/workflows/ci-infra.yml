@@ -100,7 +100,7 @@ jobs:
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
       
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: trivy-result
           path: ${{ github.workspace }}/trivy-results.json
