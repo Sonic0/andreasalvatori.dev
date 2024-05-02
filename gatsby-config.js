@@ -1,4 +1,3 @@
-const urljoin = require("url-join")
 const config = require("./data/siteConfig")
 
 module.exports = {
@@ -9,7 +8,7 @@ module.exports = {
     author: config.author,
     authorName: config.authorName,
     authorDescription: config.userDescription,
-    siteUrl: urljoin(config.siteUrl, config.pathPrefix),
+    siteUrl: config.siteUrl,
     userLinks: config.userLinks,
   },
   plugins: [
@@ -37,10 +36,7 @@ module.exports = {
         display: `minimal-ui`,
         icon: config.userAvatar, // This path is relative to the root of the site.
       },
-    },
-    // this (optional) plugin enables Progressive Web App + Offline functionality
-    // To learn more, visit: https://gatsby.dev/offline
-    `gatsby-plugin-offline`,
+    }
   ],
   flags: {
     DEV_SSR: true,
