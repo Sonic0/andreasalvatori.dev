@@ -33,6 +33,11 @@ const config = {
       iconClassName: "fas fa-4x fa-laugh-squint",
     },
     {
+      label: "Notes",
+      url: "https://notes.andreasalvatori.dev",
+      iconClassName: "fas fa-4x fa-regular fa-clipboard",
+    },
+    {
       label: "Twitter",
       url: "https://twitter.com/IU6FZL",
       iconClassName: "fab fa-4x fa-twitter",

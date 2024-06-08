@@ -8,13 +8,13 @@ export default class Header extends Component {
   render() {
     return (
       <section class="head-wrapper">
-        <StaticImage
+        {/* <StaticImage
           className="head-image-wrapper"
           src="../images/manga_board.png"
           alt="Made in Abyss"
           quality="50"
           placeholder="tracedSVG"
-        />
+        /> */}
 
         <div class="header-container">
           <span class="top-texts has-text-centered mt-3 is-size-5 has-text-weight-bold has-text-heliotrope">
