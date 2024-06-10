@@ -1,5 +1,5 @@
 const config = {
-  author: "@IU6FZL",
+  author: "IU6FZL",
   authorName: "Andrea Salvatori",
   siteTitle: "Andrea Salvatori - Sonic0", // Site title.
   siteTitleShort: "Sonic0", // Short site title for homescreen (PWA). Preferably should be under 12 characters to prevent truncation.
