@@ -1,13 +1,22 @@
-import React, { Component } from "react"
+import React from "react";
+import PropTypes from "prop-types";
 
-export default class NickName extends Component {
-  render() {
-    return (
-      <span>
-        <strong>{this.props.authorName}</strong>{" - "}
-        <span class="is-italic">{this.props.author}</span>{" - "}
-        <span>{this.props.nickName}</span>
-      </span>
-    )
-  }
-}
+const NickName = ({ authorName, author, nickName }) => {
+  return (
+    <span>
+      <strong>{authorName}</strong>
+      {" - "}
+      <span className="is-italic">{author}</span>
+      {" - "}
+      <span>{nickName}</span>
+    </span>
+  );
+};
+
+NickName.propTypes = {
+  authorName: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  nickName: PropTypes.string.isRequired,
+};
+
+export default NickName;

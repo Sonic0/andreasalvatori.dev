@@ -2,43 +2,52 @@
   "name": "andrea-salvatori-personal-site",
   "private": true,
   "description": "My simple static website",
-  "version": "1.0.0",
-  "author": "Andrea Salvatori <andrea.salvatori92@gmail.com>",
+  "version": "2.0.0",
+  "author": "Andrea Salvatori",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.5.0",
-    "bulma": "0.9.4",
-    "gatsby": "5.13.6",
-    "gatsby-cli": "^5.13.1",
-    "gatsby-core-utils": "*",
-    "gatsby-plugin-image": "^3.13.0",
-    "gatsby-plugin-manifest": "^5.13.0",
-    "gatsby-plugin-offline": "^6.13.2",
-    "gatsby-plugin-react-helmet": "^6.13.0",
-    "gatsby-plugin-sass": "^6.13.0",
-    "gatsby-plugin-sharp": "^5.13.0",
-    "gatsby-source-filesystem": "^5.13.0",
-    "gatsby-transformer-sharp": "^5.13.0",
-    "node-sass": "^9.0.0",
+    "@fortawesome/fontawesome-free": "^7.3.1",
+    "bulma": "^1.0.4",
+    "gatsby": "^5.16.1",
+    "gatsby-plugin-image": "^3.16.0",
+    "gatsby-plugin-manifest": "^5.16.0",
+    "gatsby-plugin-sass": "^6.16.0",
+    "gatsby-plugin-sharp": "^5.16.0",
+    "gatsby-source-filesystem": "^5.16.0",
+    "gatsby-transformer-sharp": "^5.16.0",
     "prop-types": "^15.8.1",
-    "react": "^18.3.0",
+    "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-helmet": "*"
+    "sass": "^1.102.0"
   },
   "devDependencies": {
-    "eslint": "^9.4.0",
-    "prettier": "^3.3.1"
+    "@eslint/js": "^9.39.5",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.11.0",
+    "prettier": "^3.9.6",
+    "gatsby-cli": "^5.16.0"
   },
   "keywords": [
-    "gatsby"
+    "gatsby",
+    "personal-website",
+    "bulma"
   ],
   "license": "GPL-3.0-or-later",
   "scripts": {
     "build": "gatsby build",
     "develop": "gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
+    "lint": "eslint .",
     "start": "npm run develop",
     "serve": "gatsby serve",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing \"",
+    "clean": "gatsby clean",
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\"",
     "refresh": "rm -rf ./node_modules ./package-lock.json && npm install"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }

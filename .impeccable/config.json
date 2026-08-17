@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "bounce-easing",
+        "value": "bounce",
+        "files": [
+          "src/styles/mystyles.scss"
+        ],
+        "createdAt": "2026-08-17T11:11:17.001Z",
+        "reason": "pre-existing scroll-down indicator animation from the original site (present since initial commit 3cdf9f7), preserved as-is per the upgrade task's goal of keeping the original design; not new design work"
+      }
+    ]
+  }
+}
