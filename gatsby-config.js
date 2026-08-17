@@ -1,4 +1,4 @@
-const config = require("./data/siteConfig")
+const config = require("./data/siteConfig");
 
 module.exports = {
   siteMetadata: {
@@ -12,7 +12,6 @@ module.exports = {
     userLinks: config.userLinks,
   },
   plugins: [
-    `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
@@ -23,12 +22,24 @@ module.exports = {
     `gatsby-plugin-image`,
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,
-    `gatsby-plugin-sass`,
+    {
+      resolve: `gatsby-plugin-sass`,
+      options: {
+        sassOptions: {
+          // gatsby-plugin-sass still calls Dart Sass's legacy render() API,
+          // and Bulma's own bundled Sass uses the deprecated if() syntax.
+          // Neither is something this project can fix directly, so silence
+          // just those two known, non-actionable deprecation warnings.
+          quietDeps: true,
+          silenceDeprecations: [`legacy-js-api`],
+        },
+      },
+    },
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
         name: config.siteTitle,
-        short_name: config.shortName,
+        short_name: config.siteTitleShort,
         description: config.siteDescription,
         start_url: config.pathPrefix,
         background_color: config.backgroundColor,
@@ -36,12 +47,6 @@ module.exports = {
         display: `minimal-ui`,
         icon: config.userAvatar, // This path is relative to the root of the site.
       },
-    }
+    },
   ],
-  flags: {
-    DEV_SSR: true,
-    PRESERVE_WEBPACK_CACHE: false,
-    PRESERVE_FILE_DOWNLOAD_CACHE: false,
-    PARALLEL_SOURCING: true,
-  },
-}
+};

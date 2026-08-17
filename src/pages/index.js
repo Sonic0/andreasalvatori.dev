@@ -1,16 +1,16 @@
-import React from "react"
-import PropTypes from "prop-types"
-import { graphql } from "gatsby"
-import Layout from "../components/layout"
-// import { SEO as seo } from "../components/seo";
-import About from "../components/about"
+import React from "react";
+import PropTypes from "prop-types";
+import { graphql } from "gatsby";
+import Layout from "../components/layout";
+import Seo from "../components/seo";
+import About from "../components/about";
 
 const IndexPage = ({ data }) => {
-  const page = data.site.siteMetadata
-  const files = data.file
+  const page = data.site.siteMetadata;
+  const files = data.file;
+
   return (
     <Layout>
-      <seo lang="en" title="Home" />
       <About
         shortName={page.shortName}
         authorName={page.authorName}
@@ -20,18 +20,35 @@ const IndexPage = ({ data }) => {
         userLinks={page.userLinks}
       />
     </Layout>
-  )
-}
+  );
+};
 
 IndexPage.propTypes = {
-  site: PropTypes.shape({
-    siteMetadata: PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
-    }),
-  }),
-}
-export default IndexPage
+  data: PropTypes.shape({
+    site: PropTypes.shape({
+      siteMetadata: PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        shortName: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+        author: PropTypes.string.isRequired,
+        authorName: PropTypes.string.isRequired,
+        authorDescription: PropTypes.string.isRequired,
+        userLinks: PropTypes.arrayOf(
+          PropTypes.shape({
+            label: PropTypes.string.isRequired,
+            url: PropTypes.string.isRequired,
+            iconClassName: PropTypes.string.isRequired,
+          }),
+        ).isRequired,
+      }).isRequired,
+    }).isRequired,
+    file: PropTypes.object.isRequired,
+  }).isRequired,
+};
+
+export default IndexPage;
+
+export const Head = () => <Seo lang="en" title="Home" />;
 
 export const query = graphql`
   {
@@ -56,4 +73,4 @@ export const query = graphql`
       }
     }
   }
-`
+`;

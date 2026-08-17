@@ -1,8 +1,5 @@
 @charset "utf-8";
 
-// Import a Google Font
-@import url('https://fonts.googleapis.com/css2?family=Aldrich&display=swap');
-
 // Set your brand colors
 // Palette
 $electricPurple: #A449FF;
@@ -10,11 +7,36 @@ $heliotrope: #C879FF;
 $mauve: #FFB7FF;
 $electricBlue: #3BF4FB;
 $inchworm: #CAFF8A;
-// Update Bulma's color variables
-$purple: $electricPurple;
-$primary: $electricBlue;
-$link: $electricPurple;
-$white: #fff;
+
+// Bulma v1 uses the Dart Sass module system: variables are passed as
+// configuration to `@use` instead of being set beforehand and picked up
+// by `@import`. `@use` rules must appear before any other rule, so this
+// has to come right after the palette declarations above.
+// See https://bulma.io/documentation/start/migrating-to-v1/
+//
+// Bulma v1 also ships an automatic light/dark theme that switches on
+// `prefers-color-scheme`. This site was designed with a single fixed
+// light theme (some elements hardcode a white/dark background), so we
+// use Bulma's "no dark mode" entry point to keep that intent instead of
+// text/background colors flipping under a dark OS/browser preference.
+@use "bulma/versions/bulma-no-dark-mode" with (
+  // Update Bulma's color variables
+  $purple: $electricPurple,
+  $primary: $electricBlue,
+  $link: $electricPurple,
+  $white: #fff,
+  // Update Bulma's global variables
+  $family-sans-serif: '"Aldrich", sans-serif',
+  // Update some of Bulma's component variables
+  $control-border-width: 2px,
+  $input-border-color: transparent,
+  $input-shadow: none
+);
+
+// Import a Google Font
+@import url('https://fonts.googleapis.com/css2?family=Aldrich&display=swap');
+
+@import "@fortawesome/fontawesome-free/css/all.css";
 
 .has-text-mauve {
   color: $mauve;
@@ -28,19 +50,6 @@ $white: #fff;
   color: $inchworm;
 }
 
-// Update Bulma's global variables
-$family-sans-serif: 'Aldrich', sans-serif;
-
-// Update some of Bulma's component variables
-$control-border-width: 2px;
-$input-border-color: transparent;
-$input-shadow: none;
-
-@import "../../node_modules/bulma/bulma.sass";
-
-// Font Awesome styles. Modify this to import only what you need.
-@import "~@fortawesome/fontawesome-free/css/all.css";
-
 /* ------------------------
 * Custom styles go here
 ---------------------------*/
@@ -51,22 +60,27 @@ $input-shadow: none;
   min-height: 100vh;
   flex-direction: column;
 }
+
 .site-content {
   flex-grow: 1;
   overflow: hidden;
 }
+
 // Modify list styles
 #list-unstyled {
   list-style: none;
 }
+
 ul#inline-list-unstyled li {
   display: inline;
   list-style: none;
 }
+
 // Margins for buttons
 #btn-spaced {
   margin: 1rem 0;
 }
+
 // Margins for features icons
 #feature-icon {
   margin-right: 1.5rem;
@@ -83,15 +97,14 @@ ul#inline-list-unstyled li {
   .head-image-wrapper {
     position: absolute;
     width: 100vw;
-    height: 56.25vw; /* Given a 16:9 aspect ratio, 9/16*100 = 56.25 Why I have problems?*/
+    height: 56.25vw; /* Given a 16:9 aspect ratio, 9/16*100 = 56.25 */
     min-height: 100vh;
     min-width: 177.77vh; /* Given a 16:9 aspect ratio, 16/9*100 = 177.77 */
     z-index: -1;
   }
 }
 
-
-// Header boxs
+// Header boxes
 .header-container {
   display: flex;
   height: 100vh;
@@ -104,13 +117,16 @@ ul#inline-list-unstyled li {
   right: 0;
   left: 0;
 }
+
 .header-container .top-texts {
   align-self: center;
 }
+
 .header-container .middle-texts {
   align-self: center;
   width: 50vh;
 }
+
 .header-container .bottom-texts {
   align-self: center;
 }
@@ -120,72 +136,109 @@ ul#inline-list-unstyled li {
   flex-direction: row;
   justify-content: space-around;
 }
+
 .header-container .title-texts .icons-box li {
   align-self: center;
 }
-
-/* ############## */
-// .icons-box {
-//   display: flex;
-//   flex-direction: row;
-//   flex-flow: row;
-//   flex-wrap: wrap;
-//   justify-content: space-between;
-// }
 
 .about {
   height: 90vh;
   padding: 3rem;
   box-sizing: border-box;
 }
+
 .box-flex {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+}
+
+// The 6 social icons don't fit on one line on narrow phones (they need
+// ~576px at mobile sizing). Left as `nowrap`, they silently overflow past
+// both edges of the viewport and, since `.site-content` clips overflow,
+// become permanently unreachable rather than scrollable. Wrap instead.
+.social-links-list {
+  flex-wrap: wrap;
+  justify-content: center;
+
+  // `transform` has no effect on a plain (non-replaced) inline element
+  // per spec, and an `<a>` is inline by default. `.hover-lift` stays
+  // display-agnostic (the "Take me home" button is already `inline-flex`
+  // via Bulma); the icon links need this scoped separately.
+  a {
+    display: inline-block;
+  }
+
+  // Every icon renders in the same flat $link purple with no interaction
+  // feedback at all, even though the palette above defines four other
+  // accent colors that go almost unused elsewhere. On hover/focus, each
+  // icon lifts and picks up one of them in turn instead of staying inert.
+  li:nth-child(4n + 1) a:hover,
+  li:nth-child(4n + 1) a:focus-visible {
+    color: $heliotrope;
+  }
+  li:nth-child(4n + 2) a:hover,
+  li:nth-child(4n + 2) a:focus-visible {
+    color: $mauve;
+  }
+  li:nth-child(4n + 3) a:hover,
+  li:nth-child(4n + 3) a:focus-visible {
+    color: $electricBlue;
+  }
+  li:nth-child(4n + 4) a:hover,
+  li:nth-child(4n + 4) a:focus-visible {
+    color: $inchworm;
+  }
+}
+
+// Shared lift used at the site's two real interactive moments: following
+// a social link, and recovering from the 404. One motion language, reused
+// rather than inventing a second effect.
+.hover-lift {
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-lift:hover,
+.hover-lift:focus-visible {
+  transform: translateY(-6px) scale(1.1);
+}
+
+.hover-lift:focus-visible {
+  outline: 2px solid $electricPurple;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hover-lift,
+  .hover-lift:hover,
+  .hover-lift:focus-visible {
+    transition: color 0.3s ease;
+    transform: none;
+  }
 }
 
 .personalized-footer {
   height: 10vh;
 }
 
-
+// Scroll down indicator (bouncing)
 // http://webdesignbird.com/blog/divi-theme-css-improvements-tips-modifications
 .scroll-down {
-  -webkit-animation: bounce 2s infinite;animation: bounce 2s infinite;}
+  animation: bounce 2s infinite;
+}
 
-  /* Scroll down indicator (bouncing) */
-  @-webkit-keyframes bounce {
+@keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
-  -webkit-transform: translateY(0); }
+    transform: translateY(0);
+  }
   40% {
-  -webkit-transform: translateY(-30px); }
+    transform: translateY(-40px);
+  }
   60% {
-  -webkit-transform: translateY(-15px); } }
-  @-moz-keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-  -moz-transform: translateY(0); }
-  40% {
-  -moz-transform: translateY(-30px); }
-  60% {
-  -moz-transform: translateY(-15px); } }
-  @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-  -webkit-transform: translateY(0);
-  -moz-transform: translateY(0);
-  -ms-transform: translateY(0);
-  -o-transform: translateY(0);
-  transform: translateY(0); }
-  40% {
-  -webkit-transform: translateY(-40px);
-  -moz-transform: translateY(-40px);
-  -ms-transform: translateY(-40px);
-  -o-transform: translateY(-40px);
-  transform: translateY(-40px); }
-  60% {
-  -webkit-transform: translateY(-20px);
-  -moz-transform: translateY(-20px);
-  -ms-transform: translateY(-20px);
-  -o-transform: translateY(-20px);
-  transform: translateY(-20px); } }
-
+    transform: translateY(-20px);
+  }
+}
