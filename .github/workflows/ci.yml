@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches-ignore:
-      - 'main'
+      - "main"
 
 jobs:
   build:
@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 18, 20 ]
+        node-version: [22, 24]
 
     steps:
       - name: Checkout working branch
@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Caching Gatsby
         id: gatsby-cache-build
@@ -32,7 +32,7 @@ jobs:
             .cache
           key: ${{ runner.os }}-gatsby-build-${{ hashFiles('**/package.json') }}
           restore-keys: ${{ runner.os }}-gatsby-build-
-      
+
       - name: Install dependencies
         run: npm install
 

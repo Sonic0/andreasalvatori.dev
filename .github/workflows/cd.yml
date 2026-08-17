@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       release:
-        description: 'Release to deploy'
-        default: 'main'
+        description: "Release to deploy"
+        default: "main"
         required: false
         type: string
   release:
-    types: [ released ]
+    types: [released]
 jobs:
   deploy:
     name: Deploy to S3
@@ -25,8 +25,8 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 24
+          cache: "npm"
 
       - name: Cache npm
         id: cache
@@ -54,7 +54,7 @@ jobs:
 
       - name: Install gatsby-cli
         run: npm install -g gatsby-cli
-    
+
       - name: Build with Gatsby
         run: gatsby build
         env:
@@ -76,15 +76,13 @@ jobs:
       - name: Deploy static site to S3 bucket
         run: aws s3 sync ./public/ s3://${{ secrets.BUCKET_NAME }} --delete
         shell: bash
-      
+
       - name: CloudFront cache invalidation
         run: |
           echo "Getting CF distribution filtering by CDN description"
           cloudfront_dist_ids=$(aws cloudfront list-distributions \
             --query "DistributionList.Items[*].{id:Id,origin_domain:Origins.Items[0].DomainName,comment:Comment}[?starts_with(comment,'andreasalvatori.dev-prod')].id" --output text)
-          for id in "${cloudfront_dist_ids}"; do 
+          for id in "${cloudfront_dist_ids}"; do
             aws cloudfront create-invalidation --distribution-id "${id}" --paths "/*"
           done
         shell: bash
-
-        

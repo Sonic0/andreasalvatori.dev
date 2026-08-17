@@ -3,10 +3,10 @@ name: CDK CI
 on:
   push:
     branches:
-      - '*'
-      - '!main'
+      - "*"
+      - "!main"
     paths:
-      - 'infrastructure/**'
+      - "infrastructure/**"
   workflow_dispatch:
 
 jobs:
@@ -24,13 +24,13 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
-      
+          node-version: 24
+          cache: "npm"
+
       - name: Install deps
         run: |
           npm ci
-      
+
       - name: Install CDK
         run: |
           npm install aws-cdk-lib
@@ -41,7 +41,7 @@ jobs:
         id: cache
         uses: actions/cache@v3
         with:
-          path: 'infrastructure/node_modules'
+          path: "infrastructure/node_modules"
           key: ${{ runner.os }}-ci-infra-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
 
   checks:
@@ -66,22 +66,22 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-andreasalvatori.dev-actions-role
           aws-region: ${{ secrets.AWS_REGION }}
-      
+
       - name: Cache node modules
         id: cache
         uses: actions/cache@v3
         with:
-          path: 'infrastructure/node_modules'
+          path: "infrastructure/node_modules"
           key: ${{ runner.os }}-ci-infra-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-      
+
       - name: Install CDK cli
         run: |
           npm install -g aws-cdk
-      
+
       - name: Synth CDK infra
         run: cdk synth --all -c deploy-env=prod --require-approval never
         shell: bash
-      
+
       - name: CloudFormation code static analysis
         uses: stelligent/cfn_nag@master
         with:
@@ -91,15 +91,15 @@ jobs:
       - name: Run Trivy vulnerability scanner in IaC mode. Never exits with error, check result out in artifacts.
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'config'
+          scan-type: "config"
           skip-dirs: "infrastructure/node_modules"
           hide-progress: false
-          format: 'json'
-          output: 'trivy-results.json'
-          exit-code: '0'
+          format: "json"
+          output: "trivy-results.json"
+          exit-code: "0"
           ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
-      
+          severity: "CRITICAL,HIGH"
+
       - uses: actions/upload-artifact@v3
         with:
           name: trivy-result
@@ -125,13 +125,13 @@ jobs:
         id: cache
         uses: actions/cache@v3
         with:
-          path: 'infrastructure/node_modules'
+          path: "infrastructure/node_modules"
           key: ${{ runner.os }}-ci-infra-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-      
+
       - name: Install CDK cli
         run: |
           npm install -g aws-cdk
-      
+
       - name: Assume AWS IAM Role
         id: configure-aws-credentials
         uses: aws-actions/configure-aws-credentials@v4
