@@ -4,7 +4,6 @@ import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 import { aws_cloudfront as cf, CfnOutput, Duration } from 'aws-cdk-lib'
 import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as s3 from 'aws-cdk-lib/aws-s3'
-import * as iam from 'aws-cdk-lib/aws-iam'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 
 export interface StackResources {
@@ -40,21 +39,8 @@ export class StaticSiteStack extends cdk.NestedStack {
 
     // CF OAI
     const originAccessIdentity = new cf.OriginAccessIdentity(this, 'CfOriginAccessIdentity')
-    this.bucket.addToResourcePolicy(
-      new iam.PolicyStatement({
-        actions: [
-          's3:GetObject'
-        ],
-        resources: [
-          this.bucket.arnForObjects('*')
-        ],
-        principals: [
-          new iam.CanonicalUserPrincipal(
-            originAccessIdentity.cloudFrontOriginAccessIdentityS3CanonicalUserId
-          ),
-        ],
-      })
-    )
+    // Bucket read policy for the OAI is granted automatically by
+    // origins.S3BucketOrigin.withOriginAccessIdentity() below.
 
     const responseHeadersPolicy = new cf.ResponseHeadersPolicy(this, 'ResponseHeadersPolicy', {
       responseHeadersPolicyName: 'CustomResponseHeadersPolicy',
@@ -86,7 +72,7 @@ export class StaticSiteStack extends cdk.NestedStack {
       defaultRootObject: 'index.html',
       defaultBehavior: {
         functionAssociations: [],
-        origin: new origins.S3Origin(this.bucket, { originAccessIdentity }),
+        origin: origins.S3BucketOrigin.withOriginAccessIdentity(this.bucket, { originAccessIdentity }),
         responseHeadersPolicy,
         viewerProtocolPolicy: cf.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         compress: true,

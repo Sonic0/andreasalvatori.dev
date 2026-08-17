@@ -9,10 +9,10 @@ import {
   aws_logs as logs,
   aws_cloudwatch as cloudwatch,
   aws_cloudwatch_actions as cloudwatchActions,
-  aws_sns as sns
+  aws_sns as sns,
+  aws_scheduler as scheduler,
+  aws_scheduler_targets as schedulerTargets
 } from 'aws-cdk-lib'
-import { Schedule, ScheduleExpression, Group } from "@aws-cdk/aws-scheduler-alpha";
-import { LambdaInvoke } from "@aws-cdk/aws-scheduler-targets-alpha";
 
 export interface StackResources {
   readonly deployEnv: string,
@@ -21,7 +21,7 @@ export interface StackResources {
 }
 
 export class ToolsStack extends cdk.NestedStack {
-  
+
   constructor(scope: Construct, id: string, props: cdk.NestedStackProps & StackResources) {
     super(scope, id, props)
 
@@ -29,8 +29,8 @@ export class ToolsStack extends cdk.NestedStack {
 
     const isProd = props?.deployEnv === 'prod';
 
-    const schedulerGroup = new Group(this, 'schedulerToolsGroup', {
-      groupName: `${props.domainName.replace('.', '')}${props.deployEnv.toUpperCase()}`
+    const schedulerGroup = new scheduler.ScheduleGroup(this, 'schedulerToolsGroup', {
+      scheduleGroupName: `${props.domainName.replace('.', '')}${props.deployEnv.toUpperCase()}`
     })
 
     const LambdaDeleteLogsRole = new iam.Role(this, 'deleteLogsLambdaRole', {
@@ -63,6 +63,10 @@ export class ToolsStack extends cdk.NestedStack {
       }
     )
 
+    const deleteLogsLambdaLogGroup = new logs.LogGroup(this, 'deleteLogsLambdaLogGroup', {
+      retention: isProd ? logs.RetentionDays.ONE_MONTH : logs.RetentionDays.ONE_DAY,
+    })
+
     const deleteLogsLambda = new lambda.Function(this, 'deleteLogsLambda', {
       code: lambda.Code.fromAsset(path.resolve(__dirname, `../functions/lambda_${lambdaDeleteLogsName}`)),
       description: 'Delete empty log groups and set expiration in case of "never expire"',
@@ -73,26 +77,29 @@ export class ToolsStack extends cdk.NestedStack {
         ENV_NAME: props.deployEnv,
         LOG_LEVEL: isProd ? 'INFO' : 'DEBUG'
       },
-      logRetention: isProd ? logs.RetentionDays.ONE_MONTH : logs.RetentionDays.ONE_DAY,
+      logGroup: deleteLogsLambdaLogGroup,
       timeout: Duration.minutes(15),
       memorySize: 128,
       role: LambdaDeleteLogsRole
     });
-    
-    new Schedule(this, `schedulerRule`, {
+
+    const schedulerTarget = new schedulerTargets.LambdaInvoke(deleteLogsLambda, {
+        retryAttempts: 3,
+        maxEventAge: Duration.hours(1)
+      })
+
+
+    const schedule = new scheduler.Schedule(this, `schedulerRule`, {
       scheduleName: `lambda-${lambdaDeleteLogsName}-scheduler-${props.deployEnv}`,
-      schedule: ScheduleExpression.cron({
+      schedule: scheduler.ScheduleExpression.cron({
           minute: '0',
           hour: '3',
           weekDay: '1',
           timeZone: TimeZone.EUROPE_ROME,
       }),
-      target: new LambdaInvoke(deleteLogsLambda, {
-        retryAttempts: 3, 
-        maxEventAge: Duration.hours(1)
-      }),
+      target: schedulerTarget,
       description: 'Schedule to clear CloudWatch LogGroups every Monday at 3am',
-      group: schedulerGroup
+      scheduleGroup: schedulerGroup
     });
 
     const deleteLogsLambdaErrorsAlarms = new cloudwatch.Alarm(this, `deleteLogsLambda${props.deployEnv.toUpperCase()}ErrorsAlarm`, {
