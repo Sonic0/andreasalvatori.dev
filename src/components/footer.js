@@ -8,7 +8,7 @@ const MainFooter = () => {
         <p>
           © {new Date().getFullYear()}
           {` `}Andrea Salvatori -{` `}
-          <span>
+          <span aria-hidden="true">
             <b>(づ￣ ³￣)づ━☆ﾟ.*･｡ﾟ</b>
           </span>
           {` `}
@@ -16,6 +16,7 @@ const MainFooter = () => {
             href="https://github.com/Sonic0/personal-website"
             target="_blank"
             rel="noopener noreferrer"
+            className="hover-lift"
           >
             Source Code
           </a>

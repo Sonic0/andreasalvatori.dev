@@ -35,7 +35,7 @@ const config = {
     {
       label: "Notes",
       url: "https://notes.andreasalvatori.dev",
-      iconClassName: "fas fa-4x fa-regular fa-clipboard",
+      iconClassName: "fas fa-4x fa-clipboard",
     },
     {
       label: "Twitter",

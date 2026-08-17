@@ -2,11 +2,11 @@
 
 // Set your brand colors
 // Palette
-$electricPurple: #A449FF;
-$heliotrope: #C879FF;
-$mauve: #FFB7FF;
-$electricBlue: #3BF4FB;
-$inchworm: #CAFF8A;
+$electricPurple: #a449ff;
+$heliotrope: #c879ff;
+$mauve: #ffb7ff;
+$electricBlue: #3bf4fb;
+$inchworm: #caff8a;
 
 // Bulma v1 uses the Dart Sass module system: variables are passed as
 // configuration to `@use` instead of being set beforehand and picked up
@@ -34,7 +34,7 @@ $inchworm: #CAFF8A;
 );
 
 // Import a Google Font
-@import url('https://fonts.googleapis.com/css2?family=Aldrich&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Aldrich&display=swap");
 
 @import "@fortawesome/fontawesome-free/css/all.css";
 
@@ -163,14 +163,6 @@ ul#inline-list-unstyled li {
   flex-wrap: wrap;
   justify-content: center;
 
-  // `transform` has no effect on a plain (non-replaced) inline element
-  // per spec, and an `<a>` is inline by default. `.hover-lift` stays
-  // display-agnostic (the "Take me home" button is already `inline-flex`
-  // via Bulma); the icon links need this scoped separately.
-  a {
-    display: inline-block;
-  }
-
   // Every icon renders in the same flat $link purple with no interaction
   // feedback at all, even though the palette above defines four other
   // accent colors that go almost unused elsewhere. On hover/focus, each
@@ -193,13 +185,21 @@ ul#inline-list-unstyled li {
   }
 }
 
-// Shared lift used at the site's two real interactive moments: following
-// a social link, and recovering from the 404. One motion language, reused
-// rather than inventing a second effect.
+// Shared lift used at the site's real interactive moments: following a
+// social link, recovering from the 404, and the footer's source link.
+// One motion language, reused rather than inventing a new effect per spot.
 .hover-lift {
   transition:
     transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
     color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+// `transform` has no effect on a plain (non-replaced) inline element per
+// spec, and a bare `<a>` is inline by default. The "Take me home" button
+// is already `inline-flex` via Bulma and must keep that display, so this
+// only targets plain links wearing `.hover-lift` on their own.
+a.hover-lift:not(.button) {
+  display: inline-block;
 }
 
 .hover-lift:hover,
@@ -232,7 +232,11 @@ ul#inline-list-unstyled li {
 }
 
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
   }
   40% {
