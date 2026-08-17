@@ -12,7 +12,17 @@ const SocialLinks = ({ userLinks }) => {
           aria-label={element.label}
           className="hover-lift"
         >
-          <i className={element.iconClassName} aria-hidden="true"></i>
+          {element.iconSvgPath ? (
+            <svg
+              className="social-icon-svg"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path d={element.iconSvgPath} fill="currentColor" />
+            </svg>
+          ) : (
+            <i className={element.iconClassName} aria-hidden="true"></i>
+          )}
         </a>
       </span>
     </li>
@@ -26,7 +36,8 @@ SocialLinks.propTypes = {
     PropTypes.shape({
       label: PropTypes.string.isRequired,
       url: PropTypes.string.isRequired,
-      iconClassName: PropTypes.string.isRequired,
+      iconClassName: PropTypes.string,
+      iconSvgPath: PropTypes.string,
     }),
   ).isRequired,
 };

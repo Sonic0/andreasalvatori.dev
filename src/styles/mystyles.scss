@@ -185,6 +185,16 @@ ul#inline-list-unstyled li {
   }
 }
 
+// AniList's icon is drawn from Simple Icons as inline SVG (FontAwesome has
+// no AniList mark), sized in `em` to match the `fa-4x` glyphs it sits
+// beside, and filled with `currentColor` so it follows the same idle/hover
+// colors as every other icon instead of AniList's own brand blue.
+.social-icon-svg {
+  width: 4em;
+  height: 4em;
+  vertical-align: middle;
+}
+
 // Shared lift used at the site's real interactive moments: following a
 // social link, recovering from the 404, and the footer's source link.
 // One motion language, reused rather than inventing a new effect per spot.

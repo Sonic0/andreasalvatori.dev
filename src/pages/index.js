@@ -37,7 +37,8 @@ IndexPage.propTypes = {
           PropTypes.shape({
             label: PropTypes.string.isRequired,
             url: PropTypes.string.isRequired,
-            iconClassName: PropTypes.string.isRequired,
+            iconClassName: PropTypes.string,
+            iconSvgPath: PropTypes.string,
           }),
         ).isRequired,
       }).isRequired,
@@ -64,6 +65,7 @@ export const query = graphql`
           label
           url
           iconClassName
+          iconSvgPath
         }
       }
     }
