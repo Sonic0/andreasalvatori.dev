@@ -1,17 +1,17 @@
 version: 2
 updates:
-  - package-ecosystem: 'npm'
-    directory: '/'
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: 'monthly'
-    target-branch: 'develop'
-  - package-ecosystem: 'npm'
-    directory: '/infrastructure'
+      interval: "monthly"
+    target-branch: "main"
+  - package-ecosystem: "npm"
+    directory: "/infrastructure"
     schedule:
-      interval: 'monthly'
-    target-branch: 'develop'
+      interval: "monthly"
+    target-branch: "main"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
-    target-branch: 'develop'
+    target-branch: "main"
