@@ -62,7 +62,7 @@ jobs:
 
       - name: Assume AWS IAM Role
         id: configure-aws-credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-andreasalvatori.dev-actions-role
           aws-region: ${{ secrets.AWS_REGION }}
@@ -134,7 +134,7 @@ jobs:
 
       - name: Assume AWS IAM Role
         id: configure-aws-credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-andreasalvatori.dev-actions-role
           aws-region: ${{ secrets.AWS_REGION }}
